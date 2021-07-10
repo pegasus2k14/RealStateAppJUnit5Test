@@ -21,6 +21,11 @@ class RandomApartmentGeneratorTest {
 		private void setUp() {
 			this.generator = new RandomApartmentGenerator();
 		}
+		
+		/**
+		 * evaluamos el metodo generate() para Comprobar si el precio y area del apartamento
+		 * generado se encuentra dentro de los limites definidos
+		 */
 
 		@RepeatedTest(10)
 		void should_GenerateCorrectApartment_When_DefaultMinAreaMinPrice() {
@@ -57,6 +62,46 @@ class RandomApartmentGeneratorTest {
 	@Nested
 	class GeneratorCustomParameterTest{
 		
+		private RandomApartmentGenerator generator;
+		
+		/**
+		 * evaluamos el metodo generate() para Comprobar si el precio y area del apartamento
+		 * generado se encuentra dentro de los limites definidos
+		 */
+		
+		@RepeatedTest(10)
+		void should_GenerateCorrectApartment_When_CustomMinAreaMinPrice() {
+			
+			// Given
+			 //Areas minimas y maximas
+			 double minArea = 100.0;
+			 double maxArea = minArea * MAX_MULTIPLIER;
+			 //Precios minimos y maximos por metro cuadrado
+			 BigDecimal minPricePerMether = new BigDecimal(100000.0);
+			 BigDecimal maxPricePerMether = minPricePerMether.multiply(new BigDecimal(MAX_MULTIPLIER));
+			 
+			 //creamos instancia de RandomApartmentGenerator y le pasamos area minima y precio minimo
+			 //personalizados a  su constructor
+			 generator = new RandomApartmentGenerator(minArea, minPricePerMether);
+			
+			 // When
+             Apartment apartment = generator.generate(); 
+			
+            // Then
+             //Calculamos el precio minimo y maximo del apartamente generado en base a su area multiplicada
+             //por el precio por metro cuadrado
+             BigDecimal minApartmentPrice = new BigDecimal(apartment.getArea()).multiply(minPricePerMether);
+             BigDecimal maxApartmentPrice = new BigDecimal(apartment.getArea()).multiply(maxPricePerMether);
+             
+             //Comprobamos si el precio y area del apartamento se encuentra dentro de los limites definidos
+             assertAll(
+           		 ()-> assertTrue(apartment.getPrice().compareTo(minApartmentPrice)>=0), //si el precio es >= al minimo
+           		 ()-> assertTrue(apartment.getPrice().compareTo(maxApartmentPrice)<=0), //Si el precio es <= maximo
+           		 ()-> assertTrue(apartment.getArea()>= minArea),  //Si el area del apartament es >= minima
+           		 ()-> assertTrue(apartment.getArea()<=maxArea)
+           		  
+             );
+		}
 	}
 
 	
