@@ -53,6 +53,7 @@ class RandomApartmentGeneratorTest {
 
 	}
 	
+	
 	@Nested
 	class GeneratorCustomParameterTest{
 		
