@@ -104,10 +104,4 @@ class RandomApartmentGeneratorTest {
 		}
 	}
 
-	
-	
-	
-	
-	
-
 }
